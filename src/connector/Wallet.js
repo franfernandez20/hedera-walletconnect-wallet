@@ -4,9 +4,8 @@ import Signer from './Signer'
 import {getSubFungibleTokens} from '../hgraph/hgraph-sub'
 
 // FILL THIS WITH YOUR ACCOUNT ID AND OPERATOR KEY
-const accountId = '0.0.3541877'
-const operatorKey =
-  '302e020100300506032b65700422042015fa59d5970c0307bca3807ceb6d10cdd6ba30cc502219fc72c6de9b7a319d85'
+const accountId = ''
+const operatorKey = ''
 const network = 'testnet'
 
 const walletMetadata = {
