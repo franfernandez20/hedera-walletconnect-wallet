@@ -1,4 +1,11 @@
-const subFungibleTokens = `
+import Client, {Network, Environment} from '@hgraph.io/sdk'
+
+const options = {
+  network: Network.HederaTestnet,
+  environment: Environment.Development,
+}
+
+const FungibleTokensSubscription = `
 subscription AccountTokenBalances($accountId: bigint!) {
   entity_by_pk(id: $accountId) {
         balance
@@ -19,42 +26,28 @@ subscription AccountTokenBalances($accountId: bigint!) {
       }
     }
   }
-}`;
+}`
 
-export const getSubFungibleTokens = async (
-  onSubUpdate,
-  accountId,
-  hederaNetwork
-) => {
-  const { default: hg } = await import("@hgraph.io/sdk");
-  const accountParsed = accountId.toString().replace("0.0.", "");
+const client = new Client(options)
 
-  const unSubscribe = await hg(subFungibleTokens, {
-    headers: {
-      "x-hgraph-network": hederaNetwork,
-      /*  authorization:
-          'Bearer <>', */
+export const getSubFungibleTokens = async (next, fullAccountId) => {
+  return client.subscribe(
+    {
+      query: FungibleTokensSubscription,
+      variables: {accountId: fullAccountId.replace('0.0.', '')},
     },
-    variables: { accountId: accountParsed },
-    next: ({ data, errors }) => {
-      if (errors) {
-        console.log("getSubFungibleTokens errors", errors);
-        //TODO: handle errors
-      }
-      const dataParsed = {
-        balance: data?.entity_by_pk?.balance,
-        token_account: data?.entity_by_pk?.token_account?.filter(
-          (token) => token.associated === true
-        ),
-      };
-      onSubUpdate(dataParsed);
-    },
-    error: (error) => {
-      console.error(error);
-    },
-    complete: () => {
-      console.log("Optionally do some cleanup");
-    },
-  });
-  return unSubscribe;
-};
+    {
+      // handle the data
+      next: (data) => {
+        console.log(data)
+        next(data)
+      },
+      error: (e) => {
+        console.error(e)
+      },
+      complete: () => {
+        console.log('Optionally do some cleanup')
+      },
+    }
+  )
+}
