@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@hashgraph/hedera-wallet-connect": "^0.1.0",
-    "@hashgraph/sdk": "^2.25.0",
+    "@hashgraph/sdk": "^2.26.0",
     "@hgraph.io/sdk": "0.1.2-1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
