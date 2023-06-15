@@ -72,7 +72,8 @@ export const getSubNftsCollections = async (
   const unSubscribe = _client.subscribe(options, {
     next: ({ data, errors }) => {
       if (errors) {
-        //TODO: handle errors
+        console.error("ERROR inside of NEXT getSubNftsCollections", errors);
+        return;
       }
       const parsedCollections = data?.account?.collections
         ?.map((collection) => ({
@@ -85,9 +86,11 @@ export const getSubNftsCollections = async (
       onSubUpdate(parsedCollections ?? []);
     },
     error: (error) => {
-      console.error(error);
+      console.error("ERROR getSubNftsCollections", error);
     },
-    complete: () => {},
+    complete: () => {
+      console.log("COMPLETE getSubNftsCollections");
+    },
   });
   return unSubscribe;
 };
@@ -112,15 +115,18 @@ export const getSubNftsFromOneCollection = async (
     // The client supports filtering the response date using jmespath -  https://jmespath.org/
     next: ({ data, errors }) => {
       if (errors) {
-        //TODO: handle errors
+        console.log("ERROR inside of NEXT getSubNftsFromOneCollection", errors);
+        return;
       }
 
       onSubUpdate(data?.nft || []);
     },
     error: (error) => {
-      console.error(error);
+      console.error("ERROR getSubNftsFromOneCollection", error);
     },
-    complete: () => {},
+    complete: () => {
+      console.log("COMPLETE getSubNftsFromOneCollection");
+    },
   });
   return unSubscribe;
 };

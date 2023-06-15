@@ -64,6 +64,8 @@ function Wallet() {
   const [fungibleTokens, setFungibleTokens] = useState([]);
   const [galleryNfts, setGalleryNfts] = useState([]);
   const [nftsFromOneCollection, setNftsFromOneCollection] = useState([]);
+  const [unSubNftsFromOneCollection, setUnSubNftsFromOneCollection] =
+    useState(null);
 
   useEffect(() => {
     init();
@@ -107,30 +109,28 @@ function Wallet() {
   };
 
   const handleSubNftCollections = () => {
-    unSubPromise.current = getSubNftsCollections(
-      setGalleryNfts,
-      accountId,
-      "testnet"
-    );
+    getSubNftsCollections(setGalleryNfts, accountId, "testnet");
   };
   console.log("galleryNfts: ", galleryNfts);
 
   const handleSubNftsFromOneCollection = () => {
     const tokenId = "0.0.3065157";
-    unSubPromise.current = getSubNftsFromOneCollection(
+    const unSub = getSubNftsFromOneCollection(
       setNftsFromOneCollection,
       accountId,
       tokenId,
       "testnet"
     );
+    setUnSubNftsFromOneCollection(unSub);
   };
   console.log("nftsFromOneCollection: ", nftsFromOneCollection);
 
   const handleUnSubNftsFromOneCollection = async () => {
-    const unSubFunction = await unSubPromise.current;
-    console.log(await unSubFunction);
-    unSubFunction();
+    console.log("UNSUBING NFTS FROM ONE COLLECTION");
+    await unSubNftsFromOneCollection();
   };
+
+  console.log("unSubNftsFromOneCollection: ", unSubNftsFromOneCollection);
 
   return (
     <div>
